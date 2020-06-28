@@ -48,12 +48,16 @@ func main() {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		util.Notify("error", "failed to authenticate with the server, check the log at: "+util.LogFileName, "", true)
-		util.Logger.Fatalln("error parsing server response body JSON:", err)
+		util.Logger.Fatalln("error reading server response body:", err)
 	}
 
-	// Parse into JSON
+	// Parse JSON into map
 	var idJSON map[string]string
 	err = json.Unmarshal(body, &idJSON)
+	if err != nil {
+		util.Notify("error", "failed to authenticate with the server, check the log at: "+util.LogFileName, "", true)
+		util.Logger.Fatalln("error parsing server response body JSON:", err)
+	}
 	if _, ok := idJSON["id"]; !ok {
 		util.Notify("error", "failed to authenticate with the server, check the log at: "+util.LogFileName, "", true)
 		util.Logger.Fatalln("server response body JSON did not contain key 'ID'")
