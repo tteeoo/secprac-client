@@ -33,7 +33,7 @@ func main() {
 	// Authenticate with the server
 	// Send post req
 	util.Logger.Println("attempting to authenticate with server (" + remote + ")")
-	resp, err := http.Post(remote+"/api/team/create", "application/json", strings.NewReader("{\"Token\": \""+token+"\"}"))
+	resp, err := http.Post(remote+"/api/team/create", "application/json", strings.NewReader("{\"token\": \""+token+"\"}"))
 	if err != nil {
 		util.Notify("error", "failed to authenticate with the server, check the log at: "+util.LogFileName, "", true)
 		util.Logger.Fatalln("error authenticating with server:", err)
@@ -54,12 +54,12 @@ func main() {
 	// Parse into JSON
 	var idJSON map[string]string
 	err = json.Unmarshal(body, &idJSON)
-	if _, ok := idJSON["ID"]; !ok {
+	if _, ok := idJSON["id"]; !ok {
 		util.Notify("error", "failed to authenticate with the server, check the log at: "+util.LogFileName, "", true)
 		util.Logger.Fatalln("server response body JSON did not contain key 'ID'")
 	}
 
-	teamID := idJSON["ID"]
+	teamID := idJSON["id"]
 	util.Notify("authenticated", "successfully authenticated with server, your team ID is: "+teamID, "", false)
 	util.Logger.Println("connected to", remote, "with ID", teamID)
 }
