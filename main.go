@@ -16,6 +16,7 @@ func main() {
 
 	// Get remote server from command line args
 	if len(os.Args) < 2 {
+		util.Notify("error", "no remote server was provided as a command-line argument", "", true)
 		util.Logger.Fatalln("no server provided; run again like this: `secprac-client <server ip/url>`")
 	}
 	remote := os.Args[1]

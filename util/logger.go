@@ -26,7 +26,8 @@ func init() {
 	// Log to terminal and a file
 	logFile, err := os.Create(LogFileName)
 	if err != nil {
-		log.Fatal(err)
+		Notify("error", "could not create log file: "+err.Error(), "", true)
+		log.Fatalln("could not create log file:", err)
 	}
 
 	logFile.Sync()
