@@ -21,7 +21,7 @@ func init() {
 	if len(logDir) < 1 {
 		logDir = "/var/log/secprac-client"
 	}
-	LogFileName := logDir + "/secprac-client-" + strconv.Itoa(int(time.Now().Unix())) + ".log"
+	LogFileName = logDir + "/secprac-client-" + strconv.Itoa(int(time.Now().Unix())) + ".log"
 
 	// Log to terminal and a file
 	logFile, err := os.Create(LogFileName)
