@@ -1,4 +1,4 @@
-package script
+package api
 
 // Script represents a vulnerablity-checking script provided by the server
 type Script struct {

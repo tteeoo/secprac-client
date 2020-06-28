@@ -4,12 +4,10 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
+	"github.com/blueberry-jam/secprac-client/api"
 	"github.com/blueberry-jam/secprac-client/util"
 	"io/ioutil"
-	"net/http"
 	"os"
-	"strings"
-	// "github.com/blueberry-jam/secprac-client/script"
 )
 
 func main() {
@@ -33,7 +31,7 @@ func main() {
 	// Authenticate with the server
 	// Send post req
 	util.Logger.Println("attempting to authenticate with server (" + remote + ")")
-	resp, err := http.Post(remote+"/api/team/create", "application/json", strings.NewReader("{\"token\": \""+token+"\"}"))
+	resp, err := api.CreateTeam(remote, token)
 	if err != nil {
 		util.Notify("error", "failed to authenticate with the server, check the log at: "+util.LogFileName, "", true)
 		util.Logger.Fatalln("error authenticating with server:", err)
@@ -65,5 +63,5 @@ func main() {
 
 	teamID := idJSON["id"]
 	util.Notify("authenticated", "successfully authenticated with server, your team ID is: "+teamID, "", false)
-	util.Logger.Println("connected to", remote, "with ID", teamID)
+	util.Logger.Println("authenticated with", remote, ", given ID", teamID)
 }
