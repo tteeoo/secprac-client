@@ -45,10 +45,14 @@ func GetScripts(remote, token string) ([]Script, error) {
 
 	// Parse JSON into slice
 	var scripts []Script
-	err = json.Unmarshal(body, &scripts)
+	var scriptMap map[string]Script
+	err = json.Unmarshal(body, &scriptMap)
 	if err != nil {
 		return nil, err
 	}
 
+	for k := range scriptMap {
+		scripts = append(scripts, scriptMap[k])
+	}
 	return scripts, nil
 }
