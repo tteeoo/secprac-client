@@ -68,7 +68,7 @@ func DownloadScripts(remote, token string, scripts []Script) ([]Script, error) {
 		script := &scripts[i]
 		go func() {
 			url := remote + "/api/scripts/" + script.URL
-			util.Logger.Println("downloading script (" + strconv.Itoa(i + 1) + "/" + strconv.Itoa(len(scripts)) + ")")
+			util.Logger.Println("downloading script (" + strconv.Itoa(i+1) + "/" + strconv.Itoa(len(scripts)) + ")")
 			client := &http.Client{}
 			req, err := http.NewRequest("GET", url, nil)
 			if err != nil {
