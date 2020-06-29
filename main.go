@@ -26,7 +26,7 @@ func main() {
 		util.Logger.Fatalln(err)
 	}
 	token := base64.URLEncoding.EncodeToString(b)
-	util.Logger.Println("generated team token:", token)
+	util.Logger.Println("generated team token")
 
 	// Authenticate with the server
 	util.Logger.Println("attempting to authenticate with server (" + remote + ")")
@@ -45,6 +45,5 @@ func main() {
 		util.Notify("error", "failed to get the vulnerability scripts from the server, check the log at: "+util.LogFileName, "", true)
 		util.Logger.Fatalln("error getting scripts from the server:", err)
 	}
-
-	util.Logger.Println(scripts)
+	util.Logger.Println("successfully obtained", len(scripts), "scripts from", remote)
 }
