@@ -16,7 +16,7 @@ func main() {
 
 	// Get remote server from command line args
 	if len(os.Args) < 2 {
-		util.Notify("error", "no remote server was provided as a command-line argument", "", true)
+		util.Notify("error", "no remote server was provided as a command-line argument", util.IconMinus, true)
 		util.Logger.Fatalln("no server provided; run again like this: `secprac-client <server ip/url>`")
 	}
 	remote := os.Args[1]
@@ -34,21 +34,21 @@ func main() {
 	util.Logger.Println("attempting to authenticate with server (" + remote + ")")
 	team, err := api.NewTeam(remote, token)
 	if err != nil {
-		util.Notify("error", "failed to authenticate with the server, check the log at: "+util.LogFileName, "", true)
+		util.Notify("error", "failed to authenticate with the server, check the log at: "+util.LogFileName, util.IconMinus, true)
 		util.Logger.Fatalln("error authenticating with server:", err)
 	}
 
-	util.Notify("authenticated", "successfully authenticated with server, your team ID is: "+team.ID, "", false)
+	util.Notify("authenticated", "successfully authenticated with server, your team ID is: "+team.ID, util.IconInfo, false)
 	util.Logger.Println("authenticated with", remote, "given ID", team.ID)
 
 	// Get the vulnerability-checking scripts
 	scripts, err := api.GetScripts(remote, token)
 	if err != nil {
-		util.Notify("error", "failed to get the vulnerability scripts from the server, check the log at: "+util.LogFileName, "", true)
+		util.Notify("error", "failed to get the vulnerability scripts from the server, check the log at: "+util.LogFileName, util.IconMinus, true)
 		util.Logger.Fatalln("error getting scripts from the server:", err)
 	}
 	if len(scripts) < 1 {
-		util.Notify("error", "the server did not provide any scripts... you win?", "", true)
+		util.Notify("error", "the server did not provide any scripts... you win?", util.IconPlus, true)
 		util.Logger.Fatalln("server provided no scripts")
 	}
 
@@ -61,17 +61,17 @@ func main() {
 			client := &http.Client{}
 			req, err := http.NewRequest("GET", url, nil)
 			if err != nil {
-				util.Notify("error", "failed to download a script, check the log at: "+util.LogFileName, "", true)
+				util.Notify("error", "failed to download a script, check the log at: "+util.LogFileName, util.IconMinus, true)
 				util.Logger.Fatalln("error downloading a script from the server:", err)
 			}
 			req.Header.Set("token", token)
 			resp, err := client.Do(req)
 			if err != nil {
-				util.Notify("error", "failed to download a script, check the log at: "+util.LogFileName, "", true)
+				util.Notify("error", "failed to download a script, check the log at: "+util.LogFileName, util.IconMinus, true)
 				util.Logger.Fatalln("error downloading a script from the server:", err)
 			}
 			if resp.StatusCode != 200 {
-				util.Notify("error", "failed to download a script, check the log at: "+util.LogFileName, "", true)
+				util.Notify("error", "failed to download a script, check the log at: "+util.LogFileName, util.IconMinus, true)
 				util.Logger.Fatalln("error downloading a script from the server:", err)
 			}
 
@@ -79,7 +79,7 @@ func main() {
 			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
 			if err != nil {
-				util.Notify("error", "failed to download a script, check the log at: "+util.LogFileName, "", true)
+				util.Notify("error", "failed to download a script, check the log at: "+util.LogFileName, util.IconMinus, true)
 				util.Logger.Fatalln("error downloading a script from the server:", err)
 			}
 			script.Script = string(body)
