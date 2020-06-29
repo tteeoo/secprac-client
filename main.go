@@ -38,4 +38,13 @@ func main() {
 
 	util.Notify("authenticated", "successfully authenticated with server, your team ID is: "+team.ID, "", false)
 	util.Logger.Println("authenticated with", remote, "given ID", team.ID)
+
+	// Get the vulnerability-checking scripts
+	scripts, err := api.GetScripts(remote, token)
+	if err != nil {
+		util.Notify("error", "failed to get the vulnerability scripts from the server, check the log at: "+util.LogFileName, "", true)
+		util.Logger.Fatalln("error getting scripts from the server:", err)
+	}
+
+	util.Logger.Println(scripts)
 }
