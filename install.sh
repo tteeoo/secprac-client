@@ -1,7 +1,7 @@
 #!/bin/sh
 
-mkdir -p /usr/share/icons/secprac
-cp img/* /usr/share/icons/secprac
+mkdir -p /usr/local/share/secprac
+cp img/* /usr/local/share/secprac
 
 # will download latest release instead of compile when we have one
 go install

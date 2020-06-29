@@ -6,16 +6,16 @@ import (
 
 const (
 	// IconPlus is the path to the plus icon
-	IconPlus = "/usr/share/icons/secprac/secprac-plus.png"
+	IconPlus = "/usr/local/share/secprac/secprac-plus.png"
 
 	// IconMinus is the path to the minus icon
-	IconMinus = "/usr/share/icons/secprac/secprac-minus.png"
+	IconMinus = "/usr/local/share/secprac/secprac-minus.png"
 
 	// IconInfo is the path to the info icon
-	IconInfo = "/usr/share/icons/secprac/secprac-info.png"
+	IconInfo = "/usr/local/share/secprac/secprac-info.png"
 
 	// IconLogo is the path to the logo icon
-	IconLogo = "/usr/share/icons/secprac/secprac-logo.png"
+	IconLogo = "/usr/local/share/secprac/secprac-logo.png"
 )
 
 // Notify sends a desktop notification
