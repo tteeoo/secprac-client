@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"time"
 
 	"github.com/blueberry-jam/secprac-client/api"
 	"github.com/blueberry-jam/secprac-client/util"
@@ -97,6 +98,7 @@ func main() {
 					script.Fixed = true
 				}
 			}
+			time.Sleep(time.Second / 5)
 		}
 	}
 }

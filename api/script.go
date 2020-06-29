@@ -63,11 +63,12 @@ func GetScripts(remote, token string) ([]Script, error) {
 // DownloadScripts downloads the scripts from the given information and populates the Script.Script struct field of all the scripts
 func DownloadScripts(remote, token string, scripts []Script) ([]Script, error) {
 	var c = make(chan error, len(scripts))
-	for i := range scripts {
+	for index := range scripts {
+		i := index
 		script := &scripts[i]
 		go func() {
 			url := remote + "/api/scripts/" + script.URL
-			util.Logger.Println("downloading script:", url)
+			util.Logger.Println("downloading script (" + strconv.Itoa(i + 1) + "/" + strconv.Itoa(len(scripts)) + ")")
 			client := &http.Client{}
 			req, err := http.NewRequest("GET", url, nil)
 			if err != nil {
