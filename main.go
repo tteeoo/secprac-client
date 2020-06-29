@@ -2,10 +2,10 @@ package main
 
 import (
 	"crypto/rand"
-	"io/ioutil"
 	"encoding/base64"
-	"os"
+	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/blueberry-jam/secprac-client/api"
 	"github.com/blueberry-jam/secprac-client/util"

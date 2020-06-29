@@ -10,11 +10,11 @@ import (
 
 // Script represents a vulnerability-checking script provided by the server
 type Script struct {
-	Name        string `json:"name"`
-	Points      int    `json:"points"`
-	Shell       string `json:"shell"`
-	Script      string `json:"script"`
-	URL         string `json:"url"`
+	Name   string `json:"name"`
+	Points int    `json:"points"`
+	Shell  string `json:"shell"`
+	Script string `json:"script"`
+	URL    string `json:"url"`
 }
 
 // GetScripts fetches the vulnerability-checking scripts from the specified remote server\
