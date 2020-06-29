@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+
+	"github.com/blueberry-jam/secprac-client/util"
 )
 
 // Script represents a vulnerability-checking script provided by the server
@@ -53,6 +55,46 @@ func GetScripts(remote, token string) ([]Script, error) {
 
 	for k := range scriptMap {
 		scripts = append(scripts, scriptMap[k])
+	}
+	return scripts, nil
+}
+
+// DownloadScripts downloads the scripts from the given information and populates the Script.Script struct field of all the scripts
+func DownloadScripts(remote, token string, scripts []Script) ([]Script, error) {
+	var c = make(chan error, len(scripts))
+	for i := range scripts {
+		script := &scripts[i]
+		go func() {
+			url := remote + "/api" + script.URL
+			util.Logger.Println("downloading script:", url)
+			client := &http.Client{}
+			req, err := http.NewRequest("GET", url, nil)
+			if err != nil {
+				c <- err
+			}
+			req.Header.Set("token", token)
+			resp, err := client.Do(req)
+			if err != nil {
+				c <- err
+			}
+			if resp.StatusCode != 200 {
+				c <- errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode))
+			}
+
+			// Read response data
+			defer resp.Body.Close()
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				c <- err
+			}
+			script.Script = string(body)
+			c <- nil
+		}()
+	}
+	for range scripts {
+		if err := <-c; err != nil {
+			return []Script{}, err
+		}
 	}
 	return scripts, nil
 }
