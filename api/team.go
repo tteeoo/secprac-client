@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/blueberry-jam/secprac-client/util"
 )
 
 // Team represents a participating team authenticated on the server
@@ -19,7 +21,7 @@ type Team struct {
 func NewTeam(remote, token string) (*Team, error) {
 
 	// Send POST request
-	resp, err := http.Post(remote+"/api/team/create", "application/json", strings.NewReader("{\"token\": \""+token+"\"}"))
+	resp, err := http.Post(remote+"/api/team/create", "application/json", strings.NewReader("{\"token\": \""+token+"\",\"time\": \""+util.GetTimestamp()+"\"}"))
 	if err != nil {
 		return nil, err
 	}
