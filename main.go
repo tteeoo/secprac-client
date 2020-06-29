@@ -16,12 +16,16 @@ import (
 // Entry point
 func main() {
 
-	// Get remote server from command line args
+	// Get remote server and user from command line args
 	if len(os.Args) < 2 {
-		util.Notify("error", "no remote server was provided as a command-line argument", util.IconMinus, true)
-		util.Logger.Fatalln("no server provided; run again like this: `secprac-client <server ip/url>`")
+		util.Logger.Fatalln("no user provided, run again like this: `secprac-client <user> <server url>`")
 	}
-	remote := os.Args[1]
+	user := os.Args[1]
+	if len(os.Args) < 3 {
+		util.Notify(user, "error", "no remote server was provided as a command-line argument", util.IconMinus, true)
+		util.Logger.Fatalln("no server provided, run again like this: `secprac-client <user> <server url>`")
+	}
+	remote := os.Args[2]
 
 	// Generate random Token
 	b := make([]byte, 18)
@@ -36,31 +40,31 @@ func main() {
 	util.Logger.Println("attempting to authenticate with server (" + remote + ")")
 	team, err := api.NewTeam(remote, token)
 	if err != nil {
-		util.Notify("error", "failed to authenticate with the server, check the log at: "+util.LogFileName, util.IconMinus, true)
+		util.Notify(user, "error", "failed to authenticate with the server, check the log at: "+util.LogFileName, util.IconMinus, true)
 		util.Logger.Fatalln("error authenticating with server:", err)
 	}
 
-	util.Notify("authenticated", "successfully authenticated with server, your team ID is "+team.ID, util.IconInfo, false)
+	util.Notify(user, "authenticated", "successfully authenticated with server, your team ID is "+team.ID, util.IconInfo, false)
 	util.Logger.Println("authenticated with", remote, "given ID", team.ID)
 
 	// Get the vulnerability-checking scripts
 	team.Scripts, err = api.GetScripts(remote, team.Token)
 	if err != nil {
-		util.Notify("error", "failed to get the script information from the server, check the log at: "+util.LogFileName, util.IconMinus, true)
+		util.Notify(user, "error", "failed to get the script information from the server, check the log at: "+util.LogFileName, util.IconMinus, true)
 		util.Logger.Fatalln("error getting script information from the server:", err)
 	}
 	if len(team.Scripts) < 1 {
-		util.Notify("error", "the server did not provide any scripts... you win?", util.IconPlus, true)
+		util.Notify(user, "error", "the server did not provide any scripts... you win?", util.IconPlus, true)
 		util.Logger.Fatalln("server provided no scripts")
 	}
 
 	// Download scripts
 	team.Scripts, err = api.DownloadScripts(remote, team.Token, team.Scripts)
 	if err != nil {
-		util.Notify("error", "failed to download scripts from the server, check the log at: "+util.LogFileName, util.IconMinus, true)
+		util.Notify(user, "error", "failed to download scripts from the server, check the log at: "+util.LogFileName, util.IconMinus, true)
 		util.Logger.Fatalln("error downloading a script from the server:", err)
 	}
-	util.Notify("downloaded scripts", "successfully downloaded "+strconv.Itoa(len(team.Scripts))+" scripts, start hacking!", util.IconInfo, false)
+	util.Notify(user, "downloaded scripts", "successfully downloaded "+strconv.Itoa(len(team.Scripts))+" scripts, start hacking!", util.IconInfo, false)
 
 	// Main loop
 	for {
