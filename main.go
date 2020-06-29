@@ -68,6 +68,7 @@ func main() {
 
 	// Main loop
 	for {
+		done := true
 		for i := range team.Scripts {
 			script := &team.Scripts[i]
 
@@ -103,7 +104,22 @@ func main() {
 					script.Fixed = true
 				}
 			}
+
+			// Not done if script isn't fixed
+			if !script.Fixed {
+				done = false
+			}
+
+			// Sleep for performance reasons
 			time.Sleep(time.Second / 5)
+		}
+
+		// Check if done
+		if done {
+			util.Logger.Println("client done!")
+			util.Notify(user, "complete", "you've successfully secured the system!", util.IconInfo, false)
+			// TODO: send request
+			break
 		}
 	}
 }
