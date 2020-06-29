@@ -19,7 +19,7 @@ func init() {
 	// Get logging directory
 	logDir := os.Getenv("SECPRAC_LOG_DIR")
 	if len(logDir) < 1 {
-		logDir = "/var/log/secprac-client"
+		logDir = "/var/log/secprac"
 	}
 	LogFileName = logDir + "/secprac-client-" + strconv.Itoa(int(time.Now().Unix())) + ".log"
 
