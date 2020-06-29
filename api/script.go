@@ -23,7 +23,7 @@ func GetScripts(remote, token string) ([]Script, error) {
 
 	// Send GET request
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", remote+"/vulns/vuln.json", nil)
+	req, err := http.NewRequest("GET", remote+"/api/vuln/vulns.json", nil)
 	if err != nil {
 		return nil, err
 	}
