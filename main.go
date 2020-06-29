@@ -73,6 +73,7 @@ func main() {
 
 			// Pipe script into shell and run
 			cmd := exec.Command(script.Shell)
+			cmd.Env = append(cmd.Env, "SECPRAC_USER="+user)
 			stdin, err := cmd.StdinPipe()
 			if err != nil {
 				util.Logger.Println("error getting command stdin:", err)
