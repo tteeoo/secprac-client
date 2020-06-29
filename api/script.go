@@ -17,6 +17,7 @@ type Script struct {
 	Shell  string `json:"shell"`
 	Script string `json:"script"`
 	URL    string `json:"url"`
+	Fixed  bool   `json:"fixed"`
 }
 
 // GetScripts fetches the vulnerability-checking scripts from the specified remote server\

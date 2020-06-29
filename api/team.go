@@ -13,8 +13,9 @@ import (
 
 // Team represents a participating team authenticated on the server
 type Team struct {
-	Token string `json:"token"`
-	ID    string `json:"id"`
+	Token   string   `json:"token"`
+	ID      string   `json:"id"`
+	Scripts []Script `json:"scripts"`
 }
 
 // NewTeam interacts with the API to create a new team at the given remote server with the specified token
