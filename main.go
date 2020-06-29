@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"sync"
 
 	"github.com/blueberry-jam/secprac-client/api"
 	"github.com/blueberry-jam/secprac-client/util"
@@ -53,9 +54,12 @@ func main() {
 	}
 
 	// Download scripts
+	var wg sync.WaitGroup
 	for i := range scripts {
+		wg.Add(1)
 		script := &scripts[i]
 		go func() {
+			defer wg.Done()
 			url := remote + "/api" + script.URL
 			util.Logger.Println("downloading script:", url)
 			client := &http.Client{}
@@ -85,7 +89,5 @@ func main() {
 			script.Script = string(body)
 		}()
 	}
-	for _, s := range scripts {
-		util.Logger.Println(s.Script)
-	}
+	wg.Wait()
 }
