@@ -56,7 +56,7 @@ func main() {
 	for i := range scripts {
 		script := &scripts[i]
 		go func() {
-			url := remote + script.URL
+			url := remote + "/api" + script.URL
 			util.Logger.Println("downloading script:", url)
 			client := &http.Client{}
 			req, err := http.NewRequest("GET", url, nil)
