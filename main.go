@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	ou "os/user"
 	"strconv"
 	"time"
 
@@ -27,7 +28,11 @@ func main() {
 	if len(os.Args) < 2 {
 		util.Logger.Fatalln("no user provided, run again like this: `secprac-client <user> <server url>`")
 	}
-	user := os.Args[1]
+	username := os.Args[1]
+	user, err := ou.Lookup(username)
+	if err != nil {
+		util.Logger.Fatalln("error fetch user with username", username+":", err)
+	}
 	if len(os.Args) < 3 {
 		util.Notify(user, "error", "no remote server was provided as a command-line argument", util.IconMinus, true)
 		util.Logger.Fatalln("no server provided, run again like this: `secprac-client <user> <server url>`")
@@ -36,7 +41,7 @@ func main() {
 
 	// Generate random Token
 	b := make([]byte, 18)
-	_, err := rand.Read(b)
+	_, err = rand.Read(b)
 	if err != nil {
 		util.Logger.Fatalln(err)
 	}
@@ -81,7 +86,7 @@ func main() {
 
 			// Pipe script into shell and run
 			cmd := exec.Command(script.Shell)
-			cmd.Env = append(cmd.Env, "SECPRAC_USER="+user)
+			cmd.Env = append(cmd.Env, "SECPRAC_USER="+user.Username)
 			stdin, err := cmd.StdinPipe()
 			if err != nil {
 				util.Logger.Println("error getting command stdin:", err)

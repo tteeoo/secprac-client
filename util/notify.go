@@ -1,7 +1,10 @@
 package util
 
 import (
+	"io/ioutil"
+	"os"
 	"os/exec"
+	ou "os/user"
 	"strconv"
 )
 
@@ -20,7 +23,7 @@ const (
 )
 
 // PointNotif takes a value of points and script name, then sends an appropriate notification
-func PointNotif(points int, name, user string) {
+func PointNotif(points int, name string, user *ou.User) {
 	if points > 0 {
 		Notify(user, "gained points", "gained "+strconv.Itoa(points)+" point(s) for "+name, IconPlus, false)
 	} else if points < 0 {
@@ -31,16 +34,32 @@ func PointNotif(points int, name, user string) {
 }
 
 // Notify sends a desktop notification
-func Notify(user, title, text, icon string, urgent bool) {
+func Notify(user *ou.User, title, text, icon string, urgent bool) {
 	var cmd *exec.Cmd
+
 	if urgent {
-		cmd = exec.Command("su", "-c", "DISPLAY=:* notify-send -u critical -a secprac -i \""+icon+"\" \""+title+"\" \""+text+"\"", user)
+		cmd = exec.Command("su", "-c", "notify-send -u critical -a secprac -i \""+icon+"\" \""+title+"\" \""+text+"\"", user.Username)
 	} else {
-		cmd = exec.Command("su", "-c", "notify-send -a secprac -i \""+icon+"\" \""+title+"\" \""+text+"\"", user)
+		cmd = exec.Command("su", "-c", "notify-send -a secprac -i \""+icon+"\" \""+title+"\" \""+text+"\"", user.Username)
 	}
 
-	cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus")
+	// Get dbus address (method varies from distro to distro)
+	if _, err := os.Stat("/run/user/"+user.Uid+"/dbus-session"); os.IsNotExist(err) {
+		if _, err := os.Stat("/run/user/"+user.Uid+"/bus"); os.IsNotExist(err) {
+			Logger.Println("error getting dbus session address for notification:", err)
+			return
+		}
+		cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/"+user.Uid+"/bus")
+	} else {
+		b, err := ioutil.ReadFile("/run/user/"+user.Uid+"/dbus-session")
+		cmd.Env = append(cmd.Env, string(b))
+		if err != nil {
+			Logger.Println("error getting dbus session address for notification:", err)
+			return
+		}
+	}
 	cmd.Env = append(cmd.Env, "DISPLAY=:*")
+
 	err := cmd.Run()
 	if err != nil {
 		Logger.Println("error sending notification:", err)
