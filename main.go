@@ -39,7 +39,7 @@ func main() {
 	username := os.Args[1]
 	user, err := ou.Lookup(username)
 	if err != nil {
-		util.Logger.Fatalln("error fetch user with username", username+":", err)
+		util.Logger.Fatalln("error fetching user with username", username+":", err)
 	}
 
 	// Get remote
