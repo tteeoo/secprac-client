@@ -4,10 +4,11 @@ mkdir -p /var/log/secprac
 mkdir -p /usr/local/share/secprac
 mkdir -p /usr/local/lib/systemd/system
 cd /usr/local/share/secprac
+rm secprac-plus.png secprac-minus.png secprac-info.png
 wget https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/data/secprac-plus.png
 wget https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/data/secprac-minus.png
 wget https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/data/secprac-info.png
-wget https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/data/secprac-logo.png
 cd /usr/local/bin
-wget https://github.com/blueberry-jam/secprac-client/releases/download/0.1.2/secprac-client
+rm secprac-client
+wget https://github.com/blueberry-jam/secprac-client/releases/download/0.1.3/secprac-client
 chmod +x secprac-client
