@@ -93,15 +93,39 @@ func main() {
 			// Check if fixed
 			if script.Fixed {
 				if string(out) != "FIXED\n" {
+					points, err := api.VulnUndo(remote, token, *script)
+					if err != nil {
+						util.Logger.Println("error when submitting undone vuln:", err)
+						continue
+					}
 					util.Logger.Println("script undone:", script.Name)
-					// TODO: send request
 					script.Fixed = false
+					team.Points += points
+					if points > 0 {
+						util.Notify(user, "gained points", "gained "+strconv.Itoa(points)+" point(s) for undoing "+script.Name, util.IconPlus, false)
+					} else if points < 0 {
+						util.Notify(user, "lost points", "lost "+strconv.Itoa(0-points)+" point(s) for undoing "+script.Name, util.IconMinus, false)
+					} else {
+						util.Notify(user, "vuln fixed", "fixed vulnerability: "+script.Name, util.IconInfo, false)
+					}
 				}
 			} else {
 				if string(out) == "FIXED\n" {
+					points, err := api.VulnDone(remote, token, *script)
+					if err != nil {
+						util.Logger.Println("error when submitting done vuln:", err)
+						continue
+					}
 					util.Logger.Println("script fixed:", script.Name)
-					// TODO: send request
 					script.Fixed = true
+					team.Points += points
+					if points > 0 {
+						util.Notify(user, "gained points", "gained "+strconv.Itoa(points)+" point(s) for "+script.Name, util.IconPlus, false)
+					} else if points < 0 {
+						util.Notify(user, "lost points", "lost "+strconv.Itoa(0-points)+" point(s) for "+script.Name, util.IconMinus, false)
+					} else {
+						util.Notify(user, "vuln fixed", "fixed vulnerability: "+script.Name, util.IconInfo, false)
+					}
 				}
 			}
 

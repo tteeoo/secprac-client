@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/blueberry-jam/secprac-client/util"
 )
@@ -99,4 +100,45 @@ func DownloadScripts(remote, token string, scripts []Script) ([]Script, error) {
 		}
 	}
 	return scripts, nil
+}
+
+func vuln(remote, endpoint, token string, script Script) (int, error) {
+
+	// Send POST request
+	resp, err := http.Post(remote+endpoint, "application/json", strings.NewReader("{\"token\": \""+token+"\",\"name\": \""+script.Name+"\",\"time\": \""+util.GetTimestamp()+"\"}"))
+	if err != nil {
+		return 0, err
+	}
+	if resp.StatusCode != 200 {
+		return 0, errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode))
+	}
+
+	// Read response data
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return 0, err
+	}
+
+	// Parse JSON into map
+	var pointJSON map[string]int
+	err = json.Unmarshal(body, &pointJSON)
+	if err != nil {
+		return 0, err
+	}
+	if _, ok := pointJSON["awarded"]; !ok {
+		return 0, errors.New("server response JSON does not contain key \"id\"")
+	}
+
+	return pointJSON["awarded"], nil
+}
+
+// VulnDone will tell the server that the client is done with a vulnerability, returns the points gained (or lost)
+func VulnDone(remote, token string, script Script) (int, error) {
+	return vuln(remote, "/api/vuln/done", token, script)
+}
+
+// VulnUndo will tell the server to undo a fixed vulnerability, returns the points lost (or gained)
+func VulnUndo(remote, token string, script Script) (int, error) {
+	return vuln(remote, "/api/vuln/undo", token, script)
 }

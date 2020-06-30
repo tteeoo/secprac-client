@@ -16,6 +16,7 @@ type Team struct {
 	Token   string   `json:"token"`
 	ID      string   `json:"id"`
 	Scripts []Script `json:"scripts"`
+	Points  int      `json:"points"`
 }
 
 // NewTeam interacts with the API to create a new team at the given remote server with the specified token
