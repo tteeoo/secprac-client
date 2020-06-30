@@ -100,7 +100,7 @@ func main() {
 				if string(out) != "FIXED\n" {
 
 					// Undo vuln
-					points, err := api.VulnUndo(remote, token, *script)
+					points, err := api.VulnUndo(remote, team.Token, *script)
 					if err != nil {
 						util.Logger.Println("error when submitting undone vuln:", err)
 						continue
@@ -114,7 +114,7 @@ func main() {
 				if string(out) == "FIXED\n" {
 
 					// Done vuln
-					points, err := api.VulnDone(remote, token, *script)
+					points, err := api.VulnDone(remote, team.Token, *script)
 					if err != nil {
 						util.Logger.Println("error when submitting done vuln:", err)
 						continue
@@ -137,7 +137,7 @@ func main() {
 
 		// Check if team is done
 		if done {
-			err := api.TeamDone(remote, token)
+			err := api.TeamDone(remote, team.Token)
 			if err != nil {
 				util.Logger.Println("error telling server team is done:", err)
 				continue
