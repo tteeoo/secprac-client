@@ -40,6 +40,7 @@ func Notify(user, title, text, icon string, urgent bool) {
 	}
 
 	cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus")
+	cmd.Env = append(cmd.Env, "DISPLAY=:*")
 	err := cmd.Run()
 	if err != nil {
 		Logger.Println("error sending notification:", err)
