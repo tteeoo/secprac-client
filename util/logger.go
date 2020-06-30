@@ -14,7 +14,8 @@ var Logger *log.Logger
 // LogFileName is the name of the log file created
 var LogFileName string
 
-func init() {
+// Init creates the Logger and log file
+func Init() {
 
 	// Get logging directory
 	logDir := os.Getenv("SECPRAC_LOG_DIR")
