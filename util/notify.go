@@ -17,9 +17,6 @@ const (
 
 	// IconInfo is the path to the info icon
 	IconInfo = "/usr/local/share/secprac/secprac-info.png"
-
-	// IconLogo is the path to the logo icon
-	IconLogo = "/usr/local/share/secprac/secprac-logo.png"
 )
 
 // PointNotif takes a value of points and script name, then sends an appropriate notification
