@@ -34,9 +34,9 @@ func PointNotif(points int, name, user string) {
 func Notify(user, title, text, icon string, urgent bool) {
 	var cmd *exec.Cmd
 	if urgent {
-		cmd = exec.Command("/bin/su", "-c", "/bin/notify-send -u critical -a secprac -i \""+icon+"\" \""+title+"\" \""+text+"\"", user)
+		cmd = exec.Command("su", "-c", "notify-send -u critical -a secprac -i \""+icon+"\" \""+title+"\" \""+text+"\"", user)
 	} else {
-		cmd = exec.Command("/bin/su", "-c", "/bin/notify-send -a secprac -i \""+icon+"\" \""+title+"\" \""+text+"\"", user)
+		cmd = exec.Command("su", "-c", "notify-send -a secprac -i \""+icon+"\" \""+title+"\" \""+text+"\"", user)
 	}
 
 	cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus")
