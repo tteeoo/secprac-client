@@ -13,13 +13,15 @@ import (
 	"github.com/blueberry-jam/secprac-client/util"
 )
 
+// Run as root!
+func init() {
+	if os.Geteuid() != 0 {
+		util.Logger.Fatalln("run the secprac client as root")
+	}
+}
+
 // Entry point
 func main() {
-
-	// Run as root!
-	if os.Geteuid() != 0 {
-		util.Logger.Fatalln("run the secprac client as root! security vulnerability detection relies on it")
-	}
 
 	// Get remote server and user from command line args
 	if len(os.Args) < 2 {
