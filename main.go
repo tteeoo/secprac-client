@@ -90,9 +90,11 @@ func main() {
 				continue
 			}
 
-			// Check if fixed
+			// Check if fixed, and if the vuln has been fixed or undone
 			if script.Fixed {
 				if string(out) != "FIXED\n" {
+
+					// Undo vuln
 					points, err := api.VulnUndo(remote, token, *script)
 					if err != nil {
 						util.Logger.Println("error when submitting undone vuln:", err)
@@ -101,16 +103,12 @@ func main() {
 					util.Logger.Println("script undone:", script.Name)
 					script.Fixed = false
 					team.Points += points
-					if points > 0 {
-						util.Notify(user, "gained points", "gained "+strconv.Itoa(points)+" point(s) for undoing "+script.Name, util.IconPlus, false)
-					} else if points < 0 {
-						util.Notify(user, "lost points", "lost "+strconv.Itoa(0-points)+" point(s) for undoing "+script.Name, util.IconMinus, false)
-					} else {
-						util.Notify(user, "vuln fixed", "fixed vulnerability: "+script.Name, util.IconInfo, false)
-					}
+					util.PointNotif(points, "undoing "+script.Name, user)
 				}
 			} else {
 				if string(out) == "FIXED\n" {
+
+					// Done vuln
 					points, err := api.VulnDone(remote, token, *script)
 					if err != nil {
 						util.Logger.Println("error when submitting done vuln:", err)
@@ -119,17 +117,11 @@ func main() {
 					util.Logger.Println("script fixed:", script.Name)
 					script.Fixed = true
 					team.Points += points
-					if points > 0 {
-						util.Notify(user, "gained points", "gained "+strconv.Itoa(points)+" point(s) for "+script.Name, util.IconPlus, false)
-					} else if points < 0 {
-						util.Notify(user, "lost points", "lost "+strconv.Itoa(0-points)+" point(s) for "+script.Name, util.IconMinus, false)
-					} else {
-						util.Notify(user, "vuln fixed", "fixed vulnerability: "+script.Name, util.IconInfo, false)
-					}
+					util.PointNotif(points, script.Name, user)
 				}
 			}
 
-			// Not done if script isn't fixed
+			// Team is not done if script isn't fixed
 			if !script.Fixed {
 				done = false
 			}
@@ -138,7 +130,7 @@ func main() {
 			time.Sleep(time.Second / 5)
 		}
 
-		// Check if done
+		// Check if team is done
 		if done {
 			util.Logger.Println("client done!")
 			util.Notify(user, "complete", "you've successfully secured the system!", util.IconInfo, false)

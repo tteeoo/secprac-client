@@ -2,6 +2,7 @@ package util
 
 import (
 	"os/exec"
+	"strconv"
 )
 
 const (
@@ -17,6 +18,17 @@ const (
 	// IconLogo is the path to the logo icon
 	IconLogo = "/usr/local/share/secprac/secprac-logo.png"
 )
+
+// PointNotif takes a value of points and script name, then sends an appropriate notification
+func PointNotif(points int, name, user string) {
+	if points > 0 {
+		Notify(user, "gained points", "gained "+strconv.Itoa(points)+" point(s) for "+name, IconPlus, false)
+	} else if points < 0 {
+		Notify(user, "lost points", "lost "+strconv.Itoa(0-points)+" point(s) for "+name, IconMinus, false)
+	} else {
+		Notify(user, "vuln fixed", "fixed vulnerability: "+name, IconInfo, false)
+	}
+}
 
 // Notify sends a desktop notification
 func Notify(user, title, text, icon string, urgent bool) {
