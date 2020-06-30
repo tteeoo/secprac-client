@@ -13,7 +13,7 @@ Tested on Ubuntu 18.04, Ubuntu 16.04, and Arch Linux.
 
 Easily install via scipt with:
 
-```bash
+```
 # curl https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/install.sh | sh
 ```
 
@@ -23,7 +23,7 @@ Otherwise, a binary is provided on the latest release page, or build from source
 
 ## Usage
 
-```bash
+```
 # secprac-client <user> <server url>
 ```
 
