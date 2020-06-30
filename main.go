@@ -132,9 +132,13 @@ func main() {
 
 		// Check if team is done
 		if done {
-			util.Logger.Println("client done!")
+			err := api.TeamDone(remote, token)
+			if err != nil {
+				util.Logger.Println("error telling server team is done:", err)
+				continue
+			}
+			util.Logger.Println("done!")
 			util.Notify(user, "complete", "you've successfully secured the system!", util.IconInfo, false)
-			// TODO: send request
 			break
 		}
 	}

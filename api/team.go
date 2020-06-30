@@ -53,3 +53,18 @@ func NewTeam(remote, token string) (*Team, error) {
 		ID:    idJSON["id"],
 	}, nil
 }
+
+// TeamDone will tell the server the client thinks it is done, and the server will respond with 200 if it agrees
+func TeamDone(remote, token string) error {
+
+	// Send POST request
+	resp, err := http.Post(remote+"/api/team/done", "application/json", strings.NewReader("{\"token\": \""+token+"\"}"))
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != 200 {
+		return errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode))
+	}
+
+	return nil
+}
