@@ -44,19 +44,19 @@ func Notify(user *ou.User, title, text, icon string, urgent bool) {
 	}
 
 	// Get dbus address (method varies from distro to distro)
-	if _, err := os.Stat("/run/user/"+user.Uid+"/dbus-session"); os.IsNotExist(err) {
-		if _, err := os.Stat("/run/user/"+user.Uid+"/bus"); os.IsNotExist(err) {
+	if _, err := os.Stat("/run/user/" + user.Uid + "/dbus-session"); os.IsNotExist(err) {
+		if _, err := os.Stat("/run/user/" + user.Uid + "/bus"); os.IsNotExist(err) {
 			Logger.Println("error getting dbus session address for notification:", err)
 			return
 		}
 		cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/"+user.Uid+"/bus")
 	} else {
-		b, err := ioutil.ReadFile("/run/user/"+user.Uid+"/dbus-session")
-		cmd.Env = append(cmd.Env, string(b))
+		b, err := ioutil.ReadFile("/run/user/" + user.Uid + "/dbus-session")
 		if err != nil {
 			Logger.Println("error getting dbus session address for notification:", err)
 			return
 		}
+		cmd.Env = append(cmd.Env, string(b[:len(b)-1]))
 	}
 	cmd.Env = append(cmd.Env, "DISPLAY=:*")
 
