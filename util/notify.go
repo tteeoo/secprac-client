@@ -56,7 +56,11 @@ func Notify(user *ou.User, title, text, icon string, urgent bool) {
 			Logger.Println("error getting dbus session address for notification:", err)
 			return
 		}
-		cmd.Env = append(cmd.Env, string(b[:len(b)-1]))
+		if b[len(b)-1] == byte('\n') {
+			cmd.Env = append(cmd.Env, string(b[:len(b)-1]))
+		} else {
+			cmd.Env = append(cmd.Env, string(b))
+		}
 	}
 	cmd.Env = append(cmd.Env, "DISPLAY=:*")
 
