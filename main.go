@@ -16,6 +16,10 @@ import (
 
 // Run as root!
 func init() {
+	if len(os.Args) > 1 && (os.Args[1] == "--version" || os.Args[1] == "-V") {
+		println("secprac-client verison 0.1.4\nCopyright (C) Theo Henson\nMIT License\nOpen source at: https://github.com/blueberry-jam/secprac-client")
+		os.Exit(0)
+	}
 	if os.Geteuid() != 0 {
 		util.Logger.Fatalln("run the secprac client as root")
 	}
@@ -24,7 +28,7 @@ func init() {
 // Entry point
 func main() {
 
-	// Get remote server and user from command line args
+	// Handle command line arguments
 	if len(os.Args) < 2 {
 		util.Logger.Fatalln("no user provided, run again like this: `secprac-client <user> <server url>`")
 	}
