@@ -4,10 +4,12 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	ou "os/user"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/blueberry-jam/secprac-client/api"
@@ -49,25 +51,66 @@ func main() {
 	}
 	remote := os.Args[2]
 
-	// Generate random Token
-	b := make([]byte, 18)
-	_, err = rand.Read(b)
-	if err != nil {
-		util.Logger.Fatalln(err)
-	}
-	token := base64.URLEncoding.EncodeToString(b)
-	util.Logger.Println("generated team token")
+	var token string
+	team := &api.Team{}
+	reco := false
 
-	// Authenticate with the server
-	util.Logger.Println("attempting to authenticate with server (" + remote + ")")
-	team, err := api.NewTeam(remote, token)
-	if err != nil {
-		util.Notify(user, "error", "failed to authenticate with the server, check the log at: "+util.LogFileName, util.IconMinus, true)
-		util.Logger.Fatalln("error authenticating with server:", err)
+	// Attempt to recover team data
+	if _, err := os.Stat("/usr/local/share/secprac/team"); err == nil {
+		reco = true
+		b, err := ioutil.ReadFile("/usr/local/share/secprac/team")
+		if err != nil {
+			util.Logger.Println("failed to read existing team data file:", err)
+			reco = false
+		} else {
+			data := strings.Split(string(b), " ")
+			if len(data) > 1 {
+				team.Token = data[0]
+				team.ID = data[1]
+				_, err = api.GetScripts(remote, team.Token)
+				if err != nil {
+					reco = false
+					util.Logger.Println("token from team data file likely invalid, error communicating with server:", err)
+				}
+				if reco {
+					util.Notify(user, "recovered", "successfully recovered valid team data from a crash, your ID is: "+team.ID, util.IconInfo, true)
+					util.Logger.Println("successfully recovered token and ID")
+				}
+			} else {
+				util.Logger.Println("existing team data file does not contain token and id")
+				reco = false
+			}
+		}
 	}
 
-	util.Notify(user, "authenticated", "successfully authenticated with server, your team ID is "+team.ID, util.IconInfo, false)
-	util.Logger.Println("authenticated with", remote, "given ID", team.ID)
+	// Generate new random token and authenticate with server
+	if !reco {
+		b := make([]byte, 18)
+		_, err = rand.Read(b)
+		if err != nil {
+			util.Logger.Fatalln(err)
+		}
+		token = base64.URLEncoding.EncodeToString(b)
+		util.Logger.Println("generated new team token")
+
+		// Authenticate with the server
+		util.Logger.Println("attempting to authenticate with server (" + remote + ")")
+		team, err = api.NewTeam(remote, token)
+		if err != nil {
+			util.Notify(user, "error", "failed to authenticate with the server, check the log at: "+util.LogFileName, util.IconMinus, true)
+			util.Logger.Fatalln("error authenticating with server:", err)
+		}
+		util.Notify(user, "authenticated", "successfully authenticated with the server, your team ID is "+team.ID, util.IconInfo, true)
+		util.Logger.Println("authenticated with", remote, "given ID", team.ID)
+
+		// Attempt to write to data file
+		err = ioutil.WriteFile("/usr/local/share/secprac/team", []byte(team.Token+" "+team.ID), 0600)
+		if err != nil {
+			util.Logger.Println("error writing to team data file:", err)
+		} else {
+			util.Logger.Println("successfully saved team data")
+		}
+	}
 
 	// Get the vulnerability-checking scripts
 	team.Scripts, err = api.GetScripts(remote, team.Token)
@@ -161,6 +204,12 @@ func main() {
 			}
 			util.Logger.Println("done!")
 			util.Notify(user, "complete", "you've successfully secured the system!", util.IconInfo, false)
+			err = os.Remove("/usr/local/share/secprac/team")
+			if err != nil {
+				util.Logger.Println("error cleaning up old team data file:", err)
+			} else {
+				util.Logger.Println("successfully cleaned up old team data file")
+			}
 			break
 		}
 	}
