@@ -7,7 +7,7 @@ This is the client to run on practice virtual machines.
 
 See the web server at <a href="https://github.com/blueberry-jam/secprac-web">blueberry-jam/secprac-web</a>.
 
-Tested on Ubuntu 18.04, Ubuntu 16.04, and Arch Linux.
+Tested on Ubuntu 18.04, Ubuntu 16.04, Debian 10, and Arch Linux.
 
 ## Installation
 
