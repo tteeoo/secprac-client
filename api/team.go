@@ -27,15 +27,16 @@ func NewTeam(remote, token string) (*Team, error) {
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != 200 {
-		return nil, errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode))
-	}
 
 	// Read response data
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode) + ", body: " + string(body))
 	}
 
 	// Parse JSON into map

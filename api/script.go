@@ -36,15 +36,16 @@ func GetScripts(remote, token string) ([]Script, error) {
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != 200 {
-		return nil, errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode))
-	}
 
 	// Read response data
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode) + ", body: " + string(body))
 	}
 
 	// Parse JSON into slice
@@ -80,15 +81,15 @@ func DownloadScripts(remote, token string, scripts []Script) ([]Script, error) {
 			if err != nil {
 				c <- err
 			}
-			if resp.StatusCode != 200 {
-				c <- errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode))
-			}
 
 			// Read response data
 			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
 			if err != nil {
 				c <- err
+			}
+			if resp.StatusCode != 200 {
+				c <- errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode) + ", body: " + string(body))
 			}
 			script.Script = string(body)
 			c <- nil
@@ -109,15 +110,16 @@ func vuln(remote, endpoint, token string, script Script) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	if resp.StatusCode != 200 {
-		return 0, errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode))
-	}
 
 	// Read response data
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return 0, err
+	}
+
+	if resp.StatusCode != 200 {
+		return 0, errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode) + ", body: " + string(body))
 	}
 
 	// Parse JSON into map
