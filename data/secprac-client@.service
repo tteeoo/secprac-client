@@ -1,0 +1,14 @@
+[Unit]
+Description=secprac client
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/
+Environment="SECPRAC_SERVICE_ARGS=%I"
+ExecStart=/usr/local/bin/secprac-client $SECPRAC_SERVICE_ARGS
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
