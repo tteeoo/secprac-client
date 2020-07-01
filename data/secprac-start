@@ -2,6 +2,6 @@
 [ $(id -u) = 0 ] || echo 'run as root, e.g. `sudo secprac-start <user> <server url>`' && exit
 [ -z "$1" ] && echo 'no user provided, run again like this `secprac-start <user> <server url>`' && exit
 [ -z "$2" ] && echo 'no server provided, run again like this `secprac-start <user> <server url>`' && exit
-which systemctl > /dev/null && systemctl start $(systemd-escape --template=secprac-client@.service '$1 $2') && exit
+which systemctl > /dev/null && systemctl start $(systemd-escape --template=secprac-client@.service "$1 $2") && exit
 echo "WARNING: DO NOT CLOSE THIS TERMINAL"
 secprac-client $1 $2
