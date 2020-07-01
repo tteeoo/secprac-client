@@ -1,7 +1,19 @@
 #!/bin/bash
-[ $(id -u) = 0 ] || echo 'run as root, e.g. `sudo secprac-start <user> <server url>`' && exit
-[ -z "$1" ] && echo 'no user provided, run again like this `secprac-start <user> <server url>`' && exit
-[ -z "$2" ] && echo 'no server provided, run again like this `secprac-start <user> <server url>`' && exit
-which systemctl > /dev/null && systemctl start $(systemd-escape --template=secprac-client@.service "$1 $2") && exit
-echo "WARNING: DO NOT CLOSE THIS TERMINAL"
+if [ $(id -u) -ne 0 ]; then 
+	echo 'run as root, e.g. `sudo secprac-start <user> <server url>`'
+	exit
+fi
+if [ -z "$1" ]; then
+	echo 'no user provided, run again like this: `secprac-start <user> <server url>`'
+	exit
+fi
+if [ -z "$2" ]; then
+	echo 'no server provided, run again like this: `secprac-start <user> <server url>`'
+	exit
+fi
+which systemctl > /dev/null && systemctl start $(systemd-escape --template=secprac-client@.service "$1 $2") > /dev/null 2>&1 && echo "started secprac-client service successfully (you may close this terminal)" && exit
+echo "failed to start systemd service, running secprac-client directly"
+echo ""
+echo "      WARNING: DO NOT CLOSE THIS TERMINAL      "
+echo ""
 secprac-client $1 $2
