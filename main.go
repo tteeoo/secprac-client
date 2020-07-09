@@ -153,7 +153,7 @@ func main() {
 			}
 			go func() {
 				defer stdin.Close()
-				io.WriteString(stdin, script.Script)
+				io.WriteString(stdin, script.Setup)
 			}()
 			out, err := cmd.CombinedOutput()
 			if err != nil {

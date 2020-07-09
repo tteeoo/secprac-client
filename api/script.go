@@ -97,7 +97,7 @@ func DownloadScripts(remote, token string, scripts []Script) ([]Script, error) {
 
 			// Get setup script (if it exists)
 			if script.SetupURL != "" {
-				url := remote + "/api/scripts/setup/" + script.URL
+				url := remote + "/api/scripts/setup/" + script.SetupURL
 				util.Logger.Println("downloading setup script (" + strconv.Itoa(i+1) + "/" + strconv.Itoa(len(scripts)) + ")")
 				client := &http.Client{}
 				req, err := http.NewRequest("GET", url, nil)
