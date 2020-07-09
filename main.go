@@ -21,7 +21,7 @@ func main() {
 
 	// Print version
 	if len(os.Args) > 1 && (os.Args[1] == "--version" || os.Args[1] == "-V") {
-		println("secprac-client verison 0.1.4\nCopyright (C) Theo Henson\nMIT License\nOpen source at: https://github.com/blueberry-jam/secprac-client")
+		println("secprac-client verison 0.1.5\ncopyright (C) 2020 the secprac authors\nlicensed under the MIT License\nopen source at: https://github.com/blueberry-jam/secprac-client")
 		os.Exit(0)
 	}
 
