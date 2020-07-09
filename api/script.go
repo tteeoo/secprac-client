@@ -13,12 +13,14 @@ import (
 
 // Script represents a vulnerability-checking script provided by the server
 type Script struct {
-	Name   string `json:"name"`
-	Points int    `json:"points"`
-	Shell  string `json:"shell"`
-	Script string `json:"script"`
-	URL    string `json:"url"`
-	Fixed  bool   `json:"fixed"`
+	Name     string `json:"name"`
+	Points   int    `json:"points"`
+	Shell    string `json:"shell"`
+	Script   string `json:"script"`
+	URL      string `json:"url"`
+	Fixed    bool   `json:"fixed"`
+	Setup    string `json:"setup"`
+	SetupURL string `json:"setup_url"`
 }
 
 // GetScripts fetches the vulnerability-checking scripts from the specified remote server\
@@ -92,6 +94,33 @@ func DownloadScripts(remote, token string, scripts []Script) ([]Script, error) {
 				c <- errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode) + ", body: " + string(body))
 			}
 			script.Script = string(body)
+
+			// Get setup script (if it exists)
+			if script.SetupURL != "" {
+				url := remote + "/api/scripts/setup/" + script.URL
+				util.Logger.Println("downloading setup script (" + strconv.Itoa(i+1) + "/" + strconv.Itoa(len(scripts)) + ")")
+				client := &http.Client{}
+				req, err := http.NewRequest("GET", url, nil)
+				if err != nil {
+					c <- err
+				}
+				req.Header.Set("token", token)
+				resp, err := client.Do(req)
+				if err != nil {
+					c <- err
+				}
+
+				// Read response data
+				defer resp.Body.Close()
+				body, err := ioutil.ReadAll(resp.Body)
+				if err != nil {
+					c <- err
+				}
+				if resp.StatusCode != 200 {
+					c <- errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode) + ", body: " + string(body))
+				}
+				script.Setup = string(body)
+			}
 			c <- nil
 		}()
 	}
