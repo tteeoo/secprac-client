@@ -1,11 +1,43 @@
-mkdir -p /usr/local/bin /var/log/secprac /etc/systemd/system /usr/local/share/secprac
-cd /etc/systemd/system
-rm secprac-client@.service
-wget https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/data/secprac-client@.service
-cd /usr/local/bin
-rm secprac-client secprac-start
-wget https://github.com/blueberry-jam/secprac-client/releases/download/0.1.5/secprac-client https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/data/secprac-start
-chmod +x secprac-client secprac-start
-cd /usr/local/share/secprac
-rm secprac-plus.png secprac-minus.png secprac-info.png team
-wget https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/data/secprac-info.png https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/data/secprac-plus.png https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/data/secprac-minus.png
+#!/bin/sh
+
+set -e
+
+VER="0.1.5-2"
+
+if [ "$(id -u)" -ne 0 ] ; then
+	echo "run as root, e.g. 'sudo $0'"
+	exit 1
+fi
+
+echo "installing secprac version $VER"
+
+printf "creating directories... "
+mkdir -p \
+	/usr/local/bin \
+	/var/log/secprac \
+	/usr/local/share/secprac \
+	/tmp/secprac
+
+cd /tmp/secprac
+echo "ok"
+
+printf "downloading archive... "
+curl -sfLO https://github.com/blueberry-jam/secprac-client/releases/download/"$VER"/secprac-client-"$VER".tar.gz
+echo "ok"
+
+printf "extracting archive... "
+tar -z -x -f secprac-client-"$VER".tar.gz
+echo "ok"
+
+printf "installing files... "
+chmod +x secprac-client data/secprac-start
+mv -f data/*.service /etc/systemd/system/
+mv -f data/*.png /usr/local/share/secprac/
+mv -f secprac-client data/secprac-start /usr/local/bin/
+echo "ok"
+
+printf "cleaning up... "
+rm -rf /tmp/secprac
+echo "ok"
+
+echo "installation successful"
