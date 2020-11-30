@@ -1,4 +1,5 @@
 VER = 0.1.5
+REV = 2
 TARGET = secprac-client
 
 $(TARGET): 
@@ -6,10 +7,10 @@ $(TARGET):
 
 clean:
 	go clean
-	rm -f $(TARGET)-$(VER).tar.gz
+	rm -f $(TARGET)-$(VER)-$(REV).tar.gz
 
 dist: $(TARGET)
-	tar -z -c -f $(TARGET)-$(VER).tar.gz data/* $(TARGET)
+	tar -z -c -f $(TARGET)-$(VER)-$(REV).tar.gz data/* $(TARGET)
 
 .PHONY: clean dist
 all: clean $(TARGET) dist
