@@ -1,9 +1,9 @@
 VER = 0.1.5
-REV = 2
+REV = 3
 TARGET = secprac-client
 
 $(TARGET): 
-	go build -o $(TARGET)
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o test -ldflags '-extldflags "-f no-PIC -static"' -buildmode pie -tags 'osusergo netgo static_build' -o $(TARGET)
 
 clean:
 	go clean

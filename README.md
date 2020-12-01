@@ -1,7 +1,7 @@
 # ![secprac-name.png](https://directory.theohenson.com/file/img/secprac-name.png)
 ![Go build status](https://github.com/blueberry-jam/secprac-client/workflows/Go/badge.svg) ![License (MIT)](https://img.shields.io/github/license/blueberry-jam/secprac-client)
 
-`secprac` is a platform to create cyber security practice games for Linux systems similar to the <a href="https://www.uscyberpatriot.org/">Cyber Patriot competition</a>.
+`secprac` is a platform to create cyber security practice games for Linux systems similar to the [Cyber Patriot competition](https://www.uscyberpatriot.org/).
 
 This is the client to run on practice virtual machines.
 
@@ -11,15 +11,21 @@ Tested on Ubuntu 18.04, Ubuntu 16.04, Debian 10, and Arch Linux.
 
 ## Installation
 
-Easily install via scipt with:
+Easily install via scipt by running:
 
 ```
-# curl https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/install.sh | sh
+curl https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/install.sh | sudo sh
 ```
 
-This script downloads the `secprac-client` binary, icons, and makes the needed directories.
+Note: on some Linux distributions `curl` is not installed by default. For example, Ubuntu. To install curl (which is needed for the command above) on Ubuntu, run
 
-Alternatively, a binary is provided on the latest release page, or build from source with `go build`.
+```
+sudo apt install curl
+```
+
+This script downloads the program, icons, and makes the needed directories.
+
+Alternatively, an executalbe is provided on the latest GitHub release page, or build the client from source with `go build`.
 
 ## Usage
 
