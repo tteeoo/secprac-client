@@ -1,6 +1,7 @@
 package util
 
 import (
+	"strings"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -51,23 +52,25 @@ func Notify(user *ou.User, title, text, icon string, urgent bool) {
 	}
 
 	// Get dbus address (method varies from distro to distro)
-	if _, err := os.Stat("/run/user/" + user.Uid + "/dbus-session"); os.IsNotExist(err) {
-		if _, err := os.Stat("/run/user/" + user.Uid + "/bus"); os.IsNotExist(err) {
-			Logger.Println("error getting dbus session address for notification:", err)
-			return
-		}
-		cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/"+user.Uid+"/bus")
-	} else {
-		b, err := ioutil.ReadFile("/run/user/" + user.Uid + "/dbus-session")
-		if err != nil {
-			Logger.Println("error getting dbus session address for notification:", err)
-			return
-		}
+	run := "/run/user/" + user.Uid
+	if d := os.Getenv("DBUS_SESSION_BUS_ADDRESS"); d != "" {
+		cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS=" + d)
+	} else if _, err := os.Stat(run + "/bus"); ! os.IsNotExist(err) {
+		cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS=unix:path=" + run + "/bus")
+	} else if b, err := ioutil.ReadFile(run + "/dbus-session"); err == nil {
 		if b[len(b)-1] == byte('\n') {
 			cmd.Env = append(cmd.Env, string(b[:len(b)-1]))
 		} else {
 			cmd.Env = append(cmd.Env, string(b))
 		}
+	} else {
+		launch := exec.Command("su", "-c", "dbus-launch --sh-syntax", user.Username)
+		b, err := launch.Output()
+		if err != nil {
+			Logger.Println("error getting dbus session address for notification")
+			return
+		}
+		cmd.Env = append(cmd.Env, strings.Replace(strings.Split(string(b), ";")[0], "'", "", 2))
 	}
 	cmd.Env = append(cmd.Env, "DISPLAY=:*")
 

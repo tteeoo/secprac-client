@@ -28,7 +28,8 @@ func GetScripts(remote, token string) ([]Script, error) {
 
 	// Send GET request
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", remote+"/api/vuln/vulns.json", nil)
+	url := remote + "/api/vuln/vulns.json"
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,7 @@ func GetScripts(remote, token string) ([]Script, error) {
 	}
 
 	if resp.StatusCode != 200 {
-		return nil, errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode) + ", body: " + string(body))
+		return nil, errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode) + ", url: " + url + ", body: " + string(body))
 	}
 
 	// Parse JSON into slice
@@ -91,7 +92,7 @@ func DownloadScripts(remote, token string, scripts []Script) ([]Script, error) {
 				c <- err
 			}
 			if resp.StatusCode != 200 {
-				c <- errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode) + ", body: " + string(body))
+				c <- errors.New("server responded with bad status code: " + strconv.Itoa(resp.StatusCode) + ", url: " + url + ", body: " + string(body))
 			}
 			script.Script = string(body)
 
