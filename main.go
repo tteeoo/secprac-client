@@ -132,40 +132,42 @@ func main() {
 	util.Notify(user, "downloaded scripts", "successfully downloaded "+strconv.Itoa(len(team.Scripts))+" scripts", util.IconInfo, false)
 
 	// Run setup scripts
-	count := 0
-	for _, script := range team.Scripts {
-		if script.Setup != "" {
-			count++
+	if !reco {
+		count := 0
+		for _, script := range team.Scripts {
+			if script.Setup != "" {
+				count++
+			}
 		}
-	}
-	if count > 0 {
-		for i := range team.Scripts {
-			script := &team.Scripts[i]
+		if count > 0 {
+			for i := range team.Scripts {
+				script := &team.Scripts[i]
 
-			// Pipe script into shell and run
-			cmd := exec.Command(script.Shell)
-			cmd.Env = append(cmd.Env, "SECPRAC_USER="+user.Username)
-			stdin, err := cmd.StdinPipe()
-			if err != nil {
-				util.Logger.Println("error getting command stdin:", err)
-				continue
-			}
-			go func() {
-				defer stdin.Close()
-				io.WriteString(stdin, script.Setup)
-			}()
-			out, err := cmd.CombinedOutput()
-			if err != nil {
-				util.Logger.Println("error running setup script:", err)
-				continue
-			}
-			if string(out) != "SETUP\n" {
-				util.Logger.Println("setup script for", script.Name, "failed")
-				util.Notify(user, "error", "failed to run some setup scripts, check the log at: "+util.LogFileName, util.IconMinus, true)
+				// Pipe script into shell and run
+				cmd := exec.Command(script.Shell)
+				cmd.Env = append(cmd.Env, "SECPRAC_USER="+user.Username)
+				stdin, err := cmd.StdinPipe()
+				if err != nil {
+					util.Logger.Println("error getting command stdin:", err)
+					continue
+				}
+				go func() {
+					defer stdin.Close()
+					io.WriteString(stdin, script.Setup)
+				}()
+				out, err := cmd.CombinedOutput()
+				if err != nil {
+					util.Logger.Println("error running setup script:", err)
+					continue
+				}
+				if string(out) != "SETUP\n" {
+					util.Logger.Println("setup script for", script.Name, "failed")
+					util.Notify(user, "error", "failed to run some setup scripts, check the log at: "+util.LogFileName, util.IconMinus, true)
+				}
 			}
 		}
+		util.Notify(user, "start", "all setup scripts have ran, you may now start!", util.IconInfo, false)
 	}
-	util.Notify(user, "start", "all setup scripts have ran, you may now start!", util.IconInfo, false)
 
 	// Main loop
 	for {

@@ -11,24 +11,14 @@ import (
 
 var (
 	// IconPlus is the path to the plus icon
-	IconPlus string
+	IconPlus = "/usr/local/share/secprac/secprac-plus.png"
 
 	// IconMinus is the path to the minus icon
-	IconMinus string
+	IconMinus = "/usr/local/share/secprac/secprac-minus.png"
 
 	// IconInfo is the path to the info icon
-	IconInfo string
+	IconInfo = "/usr/local/share/secprac/secprac-info.png"
 )
-
-func init() {
-	iconDir := os.Getenv("SECPRAC_ICON_DIR")
-	if len(iconDir) < 1 {
-		iconDir = "/usr/local/share/secprac"
-	}
-	IconPlus = iconDir + "/secprac-plus.png"
-	IconMinus = iconDir + "/secprac-minus.png"
-	IconInfo = iconDir + "/secprac-info.png"
-}
 
 // PointNotif takes a value of points and script name, then sends an appropriate notification
 func PointNotif(points int, name string, user *ou.User) {
