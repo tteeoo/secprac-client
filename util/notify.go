@@ -25,9 +25,9 @@ func init() {
 	if len(iconDir) < 1 {
 		iconDir = "/usr/local/share/secprac"
 	}
-	IconPlus = iconDir + "secprac-plus.png"
-	IconMinus = iconDir + "secprac-minus.png"
-	IconInfo = iconDir + "secprac-info.png"
+	IconPlus = iconDir + "/secprac-plus.png"
+	IconMinus = iconDir + "/secprac-minus.png"
+	IconInfo = iconDir + "/secprac-info.png"
 }
 
 // PointNotif takes a value of points and script name, then sends an appropriate notification

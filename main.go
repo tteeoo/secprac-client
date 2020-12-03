@@ -139,7 +139,6 @@ func main() {
 		}
 	}
 	if count > 0 {
-		util.Notify(user, "running setup scripts", "successfully downloaded "+strconv.Itoa(count)+" setup scripts and running them", util.IconInfo, false)
 		for i := range team.Scripts {
 			script := &team.Scripts[i]
 
@@ -161,12 +160,12 @@ func main() {
 				continue
 			}
 			if string(out) != "SETUP\n" {
-				util.Logger.Println("setup script for", script.Name, "failed to complete successfully")
+				util.Logger.Println("setup script for", script.Name, "failed")
 				util.Notify(user, "error", "failed to run some setup scripts, check the log at: "+util.LogFileName, util.IconMinus, true)
 			}
 		}
 	}
-	util.Notify(user, "start", "you may now start!", util.IconInfo, false)
+	util.Notify(user, "start", "all setup scripts have ran, you may now start!", util.IconInfo, false)
 
 	// Main loop
 	for {
