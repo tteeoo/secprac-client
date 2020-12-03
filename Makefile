@@ -3,7 +3,7 @@ REV = 3
 TARGET = secprac-client
 
 $(TARGET): 
-	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o test -ldflags '-extldflags "-f no-PIC -static"' -buildmode pie -tags 'osusergo netgo static_build' -o $(TARGET)
+	CGO_ENABLED=0 go build -o $(TARGET)
 
 clean:
 	go clean
@@ -11,6 +11,15 @@ clean:
 
 dist: $(TARGET)
 	tar -z -c -f $(TARGET)-$(VER)-$(REV).tar.gz data/* $(TARGET)
+
+install: $(TARGET)
+	mkdir -p /usr/local/bin /var/log/secprac /usr/local/share/secprac
+	cp -f $(TARGET) data/secprac-start /usr/local/bin/
+	cp -f data/*.png /usr/local/share/secprac/
+	if which systemctl > /dev/null 2>&1; then\
+		mkdir -p /etc/systemd/system;\
+		cp -f data/*.service /etc/systemd/system/;\
+	fi
 
 .PHONY: clean dist
 all: clean $(TARGET) dist

@@ -15,7 +15,7 @@ if [ -z "$2" ]; then
 	exit 1
 fi
 
-which systemctl > /dev/null && \
+which systemctl > /dev/null 2>&1 && \
 	systemctl start "$(systemd-escape --template=secprac-client@.service "$1" "$2")" > /dev/null 2>&1 && \
 	echo "started secprac-client service successfully (you may close this terminal)" && exit
 
