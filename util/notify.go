@@ -1,12 +1,12 @@
 package util
 
 import (
-	"strings"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	ou "os/user"
 	"strconv"
+	"strings"
 )
 
 var (
@@ -44,9 +44,9 @@ func Notify(user *ou.User, title, text, icon string, urgent bool) {
 	// Get dbus address (method varies from distro to distro)
 	run := "/run/user/" + user.Uid
 	if d := os.Getenv("DBUS_SESSION_BUS_ADDRESS"); d != "" {
-		cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS=" + d)
-	} else if _, err := os.Stat(run + "/bus"); ! os.IsNotExist(err) {
-		cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS=unix:path=" + run + "/bus")
+		cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS="+d)
+	} else if _, err := os.Stat(run + "/bus"); !os.IsNotExist(err) {
+		cmd.Env = append(cmd.Env, "DBUS_SESSION_BUS_ADDRESS=unix:path="+run+"/bus")
 	} else if b, err := ioutil.ReadFile(run + "/dbus-session"); err == nil {
 		if b[len(b)-1] == byte('\n') {
 			cmd.Env = append(cmd.Env, string(b[:len(b)-1]))
