@@ -1,5 +1,5 @@
 VER = 0.1.8
-REV = 1
+REV = 2
 TARGET = secprac-client
 
 $(TARGET): 
