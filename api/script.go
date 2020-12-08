@@ -136,7 +136,7 @@ func DownloadScripts(remote, token string, scripts []Script) ([]Script, error) {
 func vuln(remote, endpoint, token string, script Script) (int, error) {
 
 	// Send POST request
-	resp, err := http.Post(remote+endpoint, "application/json", strings.NewReader("{\"token\": \""+token+"\",\"name\": \""+script.Name+"\",\"time\": \""+util.GetTimestamp()+"\"}"))
+	resp, err := http.Post(remote+endpoint, "application/json", strings.NewReader(`{"token": "`+token+`", "name": "`+script.Name+`"}`))
 	if err != nil {
 		return 0, err
 	}

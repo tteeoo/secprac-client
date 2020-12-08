@@ -1,13 +1,11 @@
 # ![secprac-name.png](https://directory.theohenson.com/file/img/secprac-name.png)
 ![Go build status](https://github.com/blueberry-jam/secprac-client/workflows/Go/badge.svg) ![License (MIT)](https://img.shields.io/github/license/blueberry-jam/secprac-client)
 
-`secprac` is a platform to create cyber security practice games for Linux systems, similar to the [Cyber Patriot competition](https://www.uscyberpatriot.org/).
+`secprac` is a platform to create cyber security practice games for Linux systems, similar to the [CyberPatriot](https://www.uscyberpatriot.org/) competition.
 
 This is the client to run on practice virtual machines.
 
 See the web server at [blueberry-jam/secprac-web](https://github.com/blueberry-jam/secprac-web).
-
-Tested on Ubuntu 18, Ubuntu 16, Debian 10, and Arch Linux.
 
 ## Installation
 
