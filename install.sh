@@ -2,7 +2,7 @@
 
 set -e
 
-VER="0.1.7-2"
+VER="0.1.8-1"
 
 if [ "$(id -u)" -ne 0 ] ; then
 	echo "run as root, e.g. 'sudo $0'"
@@ -39,10 +39,20 @@ tar -z -x -f secprac-client-"$VER".tar.gz
 echo "ok"
 
 printf "installing files... "
-chmod +x secprac-client data/secprac-start
+chmod +x secprac-client data/secprac-start data/secprac-open data/secprac-report.desktop
 mv -f data/*.service /etc/systemd/system/
 mv -f data/*.png /usr/local/share/secprac/
 mv -f secprac-client data/secprac-start /usr/local/bin/
+mv -f secprac-open data/secprac-start /usr/local/bin/
+touch /usr/local/share/secprac/report.html
+if [ -n "$SUDO_USER" ] ; then
+	if which xdg-user-dir > /dev/null 2>&1; then
+		FILE=$(su -c 'xdg-user-dir DESKTOP' "$SUDO_USER")/secprac-report.desktop
+		su -c "cp -f /tmp/secprac/data/secprac-report.desktop $FILE" "$SUDO_USER"
+	else
+		su -c 'cp -f /tmp/secprac/data/secprac-report.desktop $HOME/Desktop' "$SUDO_USER"
+	fi
+fi
 echo "ok"
 
 printf "cleaning up... "

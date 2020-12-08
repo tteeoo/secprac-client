@@ -1,5 +1,5 @@
-VER = 0.1.7
-REV = 2
+VER = 0.1.8
+REV = 1
 TARGET = secprac-client
 
 $(TARGET): 
@@ -14,7 +14,8 @@ dist: $(TARGET)
 
 install: $(TARGET)
 	mkdir -p /usr/local/bin /var/log/secprac /usr/local/share/secprac
-	cp -f $(TARGET) data/secprac-start /usr/local/bin/
+	touch /usr/local/share/secprac/report.html
+	cp -f $(TARGET) data/secprac-start data/secprac-open /usr/local/bin/
 	cp -f data/*.png /usr/local/share/secprac/
 	if which systemctl > /dev/null 2>&1; then\
 		mkdir -p /etc/systemd/system;\

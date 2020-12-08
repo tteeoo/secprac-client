@@ -1,0 +1,8 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=0.1.8
+Type=Application
+Terminal=false
+Exec=/usr/local/bin/secprac-open
+Icon=/usr/local/share/secprac/secprac-logo.png
+Name=secprac scoring report

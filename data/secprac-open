@@ -1,0 +1,15 @@
+#!/bin/sh
+FILE=/usr/local/share/secprac/report.html
+if which xdg-open; then
+	exec xdg-open "$FILE"
+else
+	if [ "x$BROWSER" != "x" ] ; then
+		exec "$BROWSER" "$FILE"
+	else
+		if which firefox; then
+			exec firefox "$FILE"
+		else
+			exec chromium "$FILE"
+		fi
+	fi
+fi
