@@ -65,8 +65,9 @@ func GetScripts(remote, token string) ([]Script, error) {
 	return scripts, nil
 }
 
-// DownloadScripts downloads the scripts from the given information and populates the Script.Script struct field of all the scripts
-func DownloadScripts(remote, token string, scripts []Script) ([]Script, error) {
+// DownloadScripts downloads the scripts from the given information and populates the Script.Script struct field of all the scripts.
+// Does not download setup scripts if reco is true
+func DownloadScripts(remote, token string, scripts []Script, reco bool) ([]Script, error) {
 	var c = make(chan error, len(scripts))
 	for index := range scripts {
 		i := index
@@ -97,7 +98,7 @@ func DownloadScripts(remote, token string, scripts []Script) ([]Script, error) {
 			script.Script = string(body)
 
 			// Get setup script (if it exists)
-			if script.SetupURL != "" {
+			if script.SetupURL != "" && !reco {
 				url := remote + "/api/scripts/setup/" + script.SetupURL
 				util.Logger.Println("downloading setup script (" + strconv.Itoa(i+1) + "/" + strconv.Itoa(len(scripts)) + ")")
 				client := &http.Client{}

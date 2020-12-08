@@ -8,7 +8,7 @@ User=root
 WorkingDirectory=/
 Environment="SECPRAC_SERVICE_ARGS=%I"
 ExecStart=/usr/local/bin/secprac-client $SECPRAC_SERVICE_ARGS
-Restart=on-failure
+Restart=never
 
 [Install]
 WantedBy=multi-user.target

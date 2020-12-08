@@ -7,14 +7,25 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"os/signal"
 	ou "os/user"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/blueberry-jam/secprac-client/api"
 	"github.com/blueberry-jam/secprac-client/util"
 )
+
+func cleanup() {
+	err := os.Remove("/usr/local/share/secprac/lock")
+	if err != nil {
+		util.Logger.Println("error cleaning up lock:", err)
+	} else {
+		util.Logger.Println("cleaned up file lock")
+	}
+}
 
 // Entry point
 func main() {
@@ -54,6 +65,28 @@ func main() {
 	var token string
 	team := &api.Team{}
 	reco := false
+
+	// File lock
+	if _, err := os.Stat("/usr/local/share/secprac/lock"); err == nil {
+		util.Logger.Fatalln("another secprac client is running (remove /usr/local/share/secprac/lock if there is not)")
+	}
+	f, err := os.Create("/usr/local/share/secprac/lock")
+	if err != nil {
+		util.Logger.Println("unable to lock file /usr/local/share/secprac/lock")
+	} else {
+		util.Logger.Println("obtained file lock")
+		f.Close()
+	}
+
+	// Handle ^C
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		util.Logger.Println("SIGTERM received")
+		cleanup()
+		os.Exit(0)
+	}()
 
 	// Attempt to recover team data
 	if _, err := os.Stat("/usr/local/share/secprac/team"); err == nil {
@@ -124,7 +157,7 @@ func main() {
 	}
 
 	// Download scripts
-	team.Scripts, err = api.DownloadScripts(remote, team.Token, team.Scripts)
+	team.Scripts, err = api.DownloadScripts(remote, team.Token, team.Scripts, reco)
 	if err != nil {
 		util.Notify(user, "error", "failed to download scripts from the server, check the log at: "+util.LogFileName, util.IconMinus, true)
 		util.Logger.Fatalln("error downloading a script from the server:", err)
@@ -201,7 +234,11 @@ func main() {
 					points, err := api.VulnUndo(remote, team.Token, *script)
 					if err != nil {
 						util.Logger.Println("error when submitting undone vuln:", err)
-						continue
+						if reco {
+							util.Logger.Println("assuming unsynced vulns due to recovery, marking as not fixed")
+						} else {
+							continue
+						}
 					}
 					util.Logger.Println("script undone:", script.Name)
 					script.Fixed = false
@@ -215,7 +252,11 @@ func main() {
 					points, err := api.VulnDone(remote, team.Token, *script)
 					if err != nil {
 						util.Logger.Println("error when submitting done vuln:", err)
-						continue
+						if reco {
+							util.Logger.Println("assuming unsynced vulns due to recovery, marking as fixed")
+						} else {
+							continue
+						}
 					}
 					util.Logger.Println("script fixed:", script.Name)
 					script.Fixed = true
@@ -251,4 +292,7 @@ func main() {
 			break
 		}
 	}
+
+	cleanup()
+	os.Exit(0)
 }
