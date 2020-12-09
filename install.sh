@@ -2,7 +2,7 @@
 
 set -e
 
-VER="0.1.9"
+VER="0.2.0-1"
 
 if [ "$(id -u)" -ne 0 ] ; then
 	echo "run as root, e.g. 'sudo $0'"
@@ -16,6 +16,7 @@ mkdir -p \
 	/usr/local/bin \
 	/var/log/secprac \
 	/usr/local/share/secprac \
+	/usr/local/share/fonts \
 	/tmp/secprac
 
 cd /tmp/secprac
@@ -42,6 +43,8 @@ printf "installing files... "
 chmod +x secprac-client data/secprac-start data/secprac-open data/secprac-report.desktop
 mv -f data/*.service /etc/systemd/system/
 mv -f data/*.png data/*.html /usr/local/share/secprac/
+mv -f data/*.ttf /usr/local/share/fonts/
+fc-cache
 mv -f secprac-client data/secprac-start data/secprac-open /usr/local/bin/
 if [ -n "$SUDO_USER" ] ; then
 	if which xdg-user-dir > /dev/null 2>&1; then

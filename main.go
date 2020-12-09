@@ -32,7 +32,7 @@ func main() {
 
 	// Print version
 	if len(os.Args) > 1 && (os.Args[1] == "--version" || os.Args[1] == "-V") {
-		println("secprac-client verison 0.1.9\ncopyright (C) 2020 the secprac authors\nlicensed under the MIT License\nopen source at: https://github.com/blueberry-jam/secprac-client")
+		println("secprac-client verison 0.2.0\ncopyright (C) 2020 the secprac authors\nlicensed under the MIT License\nopen source at: https://github.com/blueberry-jam/secprac-client")
 		os.Exit(0)
 	}
 
@@ -204,6 +204,10 @@ func main() {
 
 	// Get report at intervals
 	ticker := time.NewTicker(30 * time.Second)
+	err = api.GetReport(remote, team.ID, team.Token)
+	if err != nil {
+		util.Logger.Println(err)
+	}
 	quit := make(chan struct{})
 	go func() {
 		for {

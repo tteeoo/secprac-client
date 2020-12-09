@@ -41,4 +41,4 @@ See the [web server repository's wiki](https://github.com/blueberry-jam/secprac-
 
 ## License
 
-All files are licensed under the MIT License.
+All files are licensed under the MIT License, except for `data/FiraSans-Light.ttf`, whose license is located at `data/LICENSE-Fira`.

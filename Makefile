@@ -1,4 +1,4 @@
-VER = 0.1.9
+VER = 0.2.0
 REV = 1
 TARGET = secprac-client
 
@@ -13,10 +13,12 @@ dist: $(TARGET)
 	tar -z -c -f $(TARGET)-$(VER)-$(REV).tar.gz data/* $(TARGET)
 
 install: $(TARGET)
-	mkdir -p /usr/local/bin /var/log/secprac /usr/local/share/secprac
+	mkdir -p /usr/local/bin /var/log/secprac /usr/local/share/secprac /usr/local/share/fonts
 	touch /usr/local/share/secprac/report.html
 	cp -f $(TARGET) data/secprac-start data/secprac-open /usr/local/bin/
 	cp -f data/*.png data/*.html /usr/local/share/secprac/
+	cp -f data/*.ttf /usr/local/share/fonts/
+	fc-cache
 	if which systemctl > /dev/null 2>&1; then\
 		mkdir -p /etc/systemd/system;\
 		cp -f data/*.service /etc/systemd/system/;\
