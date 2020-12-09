@@ -32,7 +32,7 @@ func main() {
 
 	// Print version
 	if len(os.Args) > 1 && (os.Args[1] == "--version" || os.Args[1] == "-V") {
-		println("secprac-client verison 0.1.7\ncopyright (C) 2020 the secprac authors\nlicensed under the MIT License\nopen source at: https://github.com/blueberry-jam/secprac-client")
+		println("secprac-client verison 0.1.9\ncopyright (C) 2020 the secprac authors\nlicensed under the MIT License\nopen source at: https://github.com/blueberry-jam/secprac-client")
 		os.Exit(0)
 	}
 
@@ -202,6 +202,24 @@ func main() {
 		util.Notify(user, "start", "all setup scripts have ran, you may now start!", util.IconInfo, false)
 	}
 
+	// Get report at intervals
+	ticker := time.NewTicker(30 * time.Second)
+	quit := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case <- ticker.C:
+				err := api.GetReport(remote, team.ID, team.Token)
+				if err != nil {
+					util.Logger.Println(err)
+				}
+			case <- quit:
+				ticker.Stop()
+				return
+			}
+		}
+	 }()
+
 	// Main loop
 	for {
 		done := true
@@ -244,6 +262,11 @@ func main() {
 					script.Fixed = false
 					team.Points += points
 					util.PointNotif(points, "undoing "+script.Name, user)
+					// Save a new copy of the scoring report
+					err = api.GetReport(remote, team.ID, team.Token)
+					if err != nil {
+						util.Logger.Println(err)
+					}
 				}
 			} else {
 				if string(out) == "FIXED\n" {
@@ -262,6 +285,11 @@ func main() {
 					script.Fixed = true
 					team.Points += points
 					util.PointNotif(points, script.Name, user)
+					// Save a new copy of the scoring report
+					err = api.GetReport(remote, team.ID, team.Token)
+					if err != nil {
+						util.Logger.Println(err)
+					}
 				}
 			}
 
@@ -271,7 +299,7 @@ func main() {
 			}
 
 			// Sleep for performance reasons
-			time.Sleep(time.Second / 5)
+			time.Sleep(time.Second / 4)
 		}
 
 		// Check if team is done
@@ -279,10 +307,17 @@ func main() {
 			err := api.TeamDone(remote, team.Token)
 			if err != nil {
 				util.Logger.Println("error telling server team is done:", err)
+				time.Sleep(time.Second / 4)
 				continue
 			}
 			util.Logger.Println("done!")
 			util.Notify(user, "complete", "you've successfully secured the system!", util.IconInfo, false)
+			// Get final report
+			err = api.GetReport(remote, team.ID, team.Token)
+			if err != nil {
+				util.Logger.Println(err)
+			}
+			// Remove teams data
 			err = os.Remove("/usr/local/share/secprac/team")
 			if err != nil {
 				util.Logger.Println("error cleaning up old team data file:", err)
