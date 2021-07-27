@@ -1,4 +1,4 @@
-# ![secprac-name.png](https://directory.theohenson.com/file/img/secprac-name.png)
+# ![secprac-name.png](https://dir.theohenson.com/file/img/secprac-name.png)
 ![Go build status](https://github.com/blueberry-jam/secprac-client/workflows/Go/badge.svg) ![License (MIT)](https://img.shields.io/github/license/blueberry-jam/secprac-client)
 
 `secprac` is a platform to create cyber security practice games for Linux systems, similar to the [CyberPatriot](https://www.uscyberpatriot.org/) competition.
