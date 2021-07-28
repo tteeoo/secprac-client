@@ -24,10 +24,10 @@ echo "ok"
 
 printf "downloading archive... "
 if which curl > /dev/null 2>&1; then
-	curl -sfLO https://github.com/blueberry-jam/secprac-client/releases/download/"$VER"/secprac-client-"$VER".tar.gz
+	curl -sfLO https://github.com/tteeoo/secprac-client/releases/download/"$VER"/secprac-client-"$VER".tar.gz
 else
 	if which wget > /dev/null 2>&1; then
-		wget https://github.com/blueberry-jam/secprac-client/releases/download/"$VER"/secprac-client-"$VER".tar.gz
+		wget https://github.com/tteeoo/secprac-client/releases/download/"$VER"/secprac-client-"$VER".tar.gz
 	else
 		echo "error"
 		echo "either curl or wget must be installed to download the files"

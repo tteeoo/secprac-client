@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/blueberry-jam/secprac-client/util"
+	"github.com/tteeoo/secprac-client/util"
 )
 
 // Script represents a vulnerability-checking script provided by the server

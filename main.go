@@ -14,8 +14,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/blueberry-jam/secprac-client/api"
-	"github.com/blueberry-jam/secprac-client/util"
+	"github.com/tteeoo/secprac-client/api"
+	"github.com/tteeoo/secprac-client/util"
 )
 
 func cleanup() {
@@ -32,7 +32,7 @@ func main() {
 
 	// Print version
 	if len(os.Args) > 1 && (os.Args[1] == "--version" || os.Args[1] == "-V") {
-		println("secprac-client verison 0.2.0\ncopyright (C) 2020 the secprac authors\nlicensed under the MIT License\nopen source at: https://github.com/blueberry-jam/secprac-client")
+		println("secprac-client verison 0.2.0\ncopyright (C) 2020 the secprac authors\nlicensed under the MIT License\nopen source at: https://github.com/tteeoo/secprac-client")
 		os.Exit(0)
 	}
 

@@ -1,3 +1,3 @@
-module github.com/blueberry-jam/secprac-client
+module github.com/tteeoo/secprac-client
 
 go 1.14

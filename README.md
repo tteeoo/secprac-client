@@ -1,18 +1,18 @@
 # ![secprac-name.png](https://dir.theohenson.com/file/img/secprac-name.png)
-![Go build status](https://github.com/blueberry-jam/secprac-client/workflows/Go/badge.svg) ![License (MIT)](https://img.shields.io/github/license/blueberry-jam/secprac-client)
+![Go build status](https://github.com/tteeoo/secprac-client/workflows/Go/badge.svg) ![License (MIT)](https://img.shields.io/github/license/tteeoo/secprac-client)
 
 `secprac` is a platform to create cyber security practice games for Linux systems, similar to the [CyberPatriot](https://www.uscyberpatriot.org/) competition.
 
 This is the client to run on practice virtual machines.
 
-See the web server at [blueberry-jam/secprac-web](https://github.com/blueberry-jam/secprac-web).
+See the web server at [tteeoo/secprac-web](https://github.com/tteeoo/secprac-web).
 
 ## Installation
 
 Easily install via script by running:
 
 ```
-wget https://raw.githubusercontent.com/blueberry-jam/secprac-client/master/install.sh && sudo sh install.sh
+wget https://raw.githubusercontent.com/tteeoo/secprac-client/master/install.sh && sudo sh install.sh
 ```
 
 ## Usage
@@ -37,7 +37,7 @@ To run the client directly (not recommended) run:
 
 ## Setting up a game (and more extensive documentation)
 
-See the [web server repository's wiki](https://github.com/blueberry-jam/secprac-web/wiki).
+See the [web server repository's wiki](https://github.com/tteeoo/secprac-web/wiki).
 
 ## License
 
