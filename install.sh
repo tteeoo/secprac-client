@@ -2,7 +2,7 @@
 
 set -e
 
-VER="0.2.0-1"
+VER="0.2.1-1"
 
 if [ "$(id -u)" -ne 0 ] ; then
 	echo "run as root, e.g. 'sudo $0'"
