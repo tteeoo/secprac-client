@@ -176,6 +176,10 @@ func main() {
 			for i := range team.Scripts {
 				script := &team.Scripts[i]
 
+				if script.Setup == "" {
+					continue
+				}
+
 				// Pipe script into shell and run
 				cmd := exec.Command(script.Shell)
 				cmd.Env = append(cmd.Env, "SECPRAC_USER="+user.Username)
